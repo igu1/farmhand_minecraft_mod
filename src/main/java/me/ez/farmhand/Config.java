@@ -9,9 +9,6 @@ public class Config {
 
     public static final ModConfigSpec.BooleanValue ENABLED;
 
-    public static final ModConfigSpec.BooleanValue SENTINEL_ENABLED;
-    public static final ModConfigSpec.IntValue SENTINEL_RADIUS;
-
     public static final ModConfigSpec.BooleanValue LAMP_ENABLED;
     public static final ModConfigSpec.IntValue LAMP_RADIUS;
     public static final ModConfigSpec.IntValue LAMP_CHANCE;
@@ -36,13 +33,6 @@ public class Config {
         builder.comment("Master switch for Farmhand").translation("farmhand.configuration.general").push("general");
         ENABLED = builder.comment("Enable Farmhand").translation("farmhand.configuration.general.enabled")
                 .define("enabled", true);
-        builder.pop();
-
-        builder.comment("Harvest Compass crop scanner").translation("farmhand.configuration.sentinel").push("sentinel");
-        SENTINEL_ENABLED = builder.comment("Enable the Harvest Compass").translation("farmhand.configuration.sentinel.enabled")
-                .define("enabled", true);
-        SENTINEL_RADIUS = builder.comment("Scan radius in blocks").translation("farmhand.configuration.sentinel.radius")
-                .defineInRange("radius", 12, 1, 48);
         builder.pop();
 
         builder.comment("Growth Lamp").translation("farmhand.configuration.growth_lamp").push("growth_lamp");

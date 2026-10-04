@@ -4,12 +4,12 @@
 
 **Development build — version 1.0.0+26.1.2. Gameplay verification is still in progress.**
 
-Five detailed farm machines and tools, with real inventories, quiet harvest surveys and portable seed storage.
+Five detailed farm machines and tools, with real inventories, labeled harvest alerts and portable seed storage.
 
 ## Features
 
-### Harvest Compass
-A redesigned handheld crop scanner with a quiet, animated HUD while held. Shows ready crops and the nearest harvest distance without sounds or repeated action-bar alerts.
+### Growpost
+Place a labeled field monitor on farmland or a solid surface. Right-click its configuration GUI to set the field label, radius and readiness threshold, and toggle owner-only chat milestones. Redstone/comparator output scales from 0 to 15 with readiness. Optional trample protection and Growth Lamp interlock are saved per post. Alerts fire once per milestone, not repeatedly while crops remain ripe. Replaces the handheld Harvest Compass.
 
 ### Growth Lamp
 A glowing block that bone-meals nearby crops over time. Radius, chance and speed are configurable.
@@ -25,7 +25,7 @@ Nine persistent slots for crop seeds. Use in the air or sneak-use to open storag
 
 ## Configuration
 
-Radius, chance and interval settings are in `config/farmhand-common.toml`. The coop and feeder also have per-machine GUI toggles.
+Machine radius, chance and interval settings are in `config/farmhand-common.toml`. The coop and feeder have per-machine GUI toggles. Growpost settings are configured in its own GUI; only the owner can edit them.
 
 ## Keybinds
 

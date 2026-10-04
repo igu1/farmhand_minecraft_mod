@@ -29,6 +29,7 @@ public class GrowthLampBlockEntity extends BlockEntity {
             return;
         }
         lamp.cooldown = Config.LAMP_INTERVAL.get();
+        if (me.ez.farmhand.util.GrowpostRegistry.pausesLamp(level, pos)) return;
 
         int radius = Config.LAMP_RADIUS.get();
         int chance = Config.LAMP_CHANCE.get();

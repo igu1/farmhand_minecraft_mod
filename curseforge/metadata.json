@@ -3,7 +3,7 @@
   "slug": "farmhand",
   "modId": "farmhand",
   "version": "1.0.0+26.1.2",
-  "summary": "Detailed farm machines with real inventories, a quiet Harvest Compass, and a portable Planter's Satchel.",
+  "summary": "Detailed farm machines with real inventories, configurable Growposts, and a portable Planter's Satchel.",
   "tagline": "Let the farm run itself.",
   "categories": [
     "Utility & QoL",

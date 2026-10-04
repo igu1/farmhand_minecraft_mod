@@ -13,5 +13,6 @@ public final class ClientSetup {
     @SubscribeEvent
     public static void screens(RegisterMenuScreensEvent event) {
         event.register(Init.MACHINE_MENU.get(), MachineInventoryScreen::new);
+        event.register(Init.GROWPOST_MENU.get(), GrowpostScreen::new);
     }
 }

@@ -24,6 +24,21 @@ import net.minecraft.world.inventory.ContainerInput;
 /** Dependency-free regression runner for crop recognition and component-backed seed storage. */
 @ExtendWith(EphemeralTestServerProvider.class)
 public final class FarmhandRegressionTest {
+    @Test
+    public void growpostSettingsPersist(MinecraftServer server) {
+        var state = Init.GROWPOST.get().defaultBlockState();
+        var post = new me.ez.farmhand.block.GrowpostBlockEntity(BlockPos.ZERO, state);
+        post.setLabel("North Wheat");
+        post.edit(1); post.edit(3); post.edit(4); post.edit(7); post.edit(8);
+        var loaded = (me.ez.farmhand.block.GrowpostBlockEntity) BlockEntity.loadStatic(BlockPos.ZERO, state,
+                post.saveWithFullMetadata(server.registryAccess()), server.registryAccess());
+        check(loaded != null && loaded.label().equals("North Wheat"), "Growpost label survives reload");
+        check(loaded.setting(0) == 9 && loaded.setting(1) == 55, "per-post radius and threshold survive reload");
+        check(loaded.setting(2) == 0 && loaded.setting(5) == 0 && loaded.setting(6) == 0, "alerts and helper settings survive reload");
+        check(!state.isSolid(), "Growpost must not turn its farmland support into dirt");
+        check(loaded.owner() == null, "loading does not silently assign an owner");
+        check(!loaded.canEdit(null), "unowned post cannot authorize arbitrary editing");
+    }
     private static int checks;
     @Test
     public void cropRecognitionAndPouchPersistence(MinecraftServer server) {

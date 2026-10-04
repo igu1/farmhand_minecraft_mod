@@ -6,7 +6,9 @@ import me.ez.farmhand.block.ChickenCoopBlock;
 import me.ez.farmhand.block.ChickenCoopBlockEntity;
 import me.ez.farmhand.block.GrowthLampBlock;
 import me.ez.farmhand.block.GrowthLampBlockEntity;
-import me.ez.farmhand.item.ResultSentinelItem;
+import me.ez.farmhand.block.GrowpostBlock;
+import me.ez.farmhand.block.GrowpostBlockEntity;
+import me.ez.farmhand.menu.GrowpostMenu;
 import me.ez.farmhand.item.SeedPouchItem;
 import me.ez.farmhand.menu.MachineMenu;
 import net.minecraft.world.inventory.MenuType;
@@ -36,8 +38,13 @@ public final class Init {
     public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(Registries.MENU, Main.MOD_ID);
     public static final DeferredHolder<MenuType<?>, MenuType<MachineMenu>> MACHINE_MENU =
             MENUS.register("machine", () -> new MenuType<>(MachineMenu::new, FeatureFlags.DEFAULT_FLAGS));
+    public static final DeferredHolder<MenuType<?>, MenuType<GrowpostMenu>> GROWPOST_MENU =
+            MENUS.register("growpost", () -> new MenuType<>(GrowpostMenu::new, FeatureFlags.DEFAULT_FLAGS));
 
     // ---- Blocks -------------------------------------------------------------
+    public static final DeferredBlock<GrowpostBlock> GROWPOST = BLOCKS.registerBlock(
+            "growpost", GrowpostBlock::new, props -> props.strength(2.0f).sound(SoundType.WOOD).noOcclusion().forceSolidOff());
+    public static final DeferredItem<net.minecraft.world.item.BlockItem> GROWPOST_ITEM = ITEMS.registerSimpleBlockItem("growpost", GROWPOST);
 
     public static final DeferredBlock<GrowthLampBlock> GROWTH_LAMP = BLOCKS.registerBlock(
             "growth_lamp", GrowthLampBlock::new,
@@ -60,12 +67,12 @@ public final class Init {
 
     // ---- Items --------------------------------------------------------------
 
-    public static final DeferredItem<ResultSentinelItem> RESULT_SENTINEL = ITEMS.registerItem(
-            "result_sentinel", ResultSentinelItem::new, props -> props.stacksTo(1));
     public static final DeferredItem<SeedPouchItem> SEED_POUCH = ITEMS.registerItem(
             "seed_pouch", SeedPouchItem::new, props -> props.stacksTo(1));
 
     // ---- Block entities -----------------------------------------------------
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GrowpostBlockEntity>> GROWPOST_BE =
+            BLOCK_ENTITIES.register("growpost", () -> new BlockEntityType<>(GrowpostBlockEntity::new, GROWPOST.get()));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GrowthLampBlockEntity>> GROWTH_LAMP_BE =
             BLOCK_ENTITIES.register("growth_lamp",
@@ -84,7 +91,7 @@ public final class Init {
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB = CREATIVE_TABS.register("farmhand",
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.farmhand"))
-                    .icon(() -> new ItemStack(RESULT_SENTINEL.get()))
+                    .icon(() -> new ItemStack(GROWPOST_ITEM.get()))
                     .displayItems(Init::addTabContents)
                     .build());
 
@@ -92,7 +99,7 @@ public final class Init {
         output.accept(GROWTH_LAMP_ITEM.get());
         output.accept(CHICKEN_COOP_ITEM.get());
         output.accept(ANIMAL_FEEDER_ITEM.get());
-        output.accept(RESULT_SENTINEL.get());
+        output.accept(GROWPOST_ITEM.get());
         output.accept(SEED_POUCH.get());
     }
 }

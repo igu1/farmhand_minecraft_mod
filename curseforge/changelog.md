@@ -6,7 +6,7 @@
 - Replaced random incubation chance with a deterministic five-second cycle, safe alternate chick spawn positions and meaningful status text. Removed decorative progress bars.
 - Feeder uses mixed foods and respects adult breeding cooldowns; feeds pairs atomically.
 - Redesigned Seed Pouch as Planter's Satchel, with persistent seed storage and farmland planting.
-- Redesigned Result Sentinel as Harvest Compass, with a quiet held-item HUD.
+- Replaced the handheld scanner with Growpost: per-post configuration GUI, field labels, owner-only milestone chat alerts, readiness redstone output, trample protection and Growth Lamp interlock. Back up worlds: old compass items do not migrate.
 - Removed pointing tooltips and XP Siphon.
 - Retained renamed item/block IDs and migrated original machine contents.
 - Inventory/component persistence and geometry/UV regression tests included. Live gameplay verification is still pending.

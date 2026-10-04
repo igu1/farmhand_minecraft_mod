@@ -2,15 +2,17 @@
 
 Minecraft **26.1.2**, NeoForge **26.1.2.108**, Java **25**.
 
-- **Harvest Compass** — redesigned Result Sentinel, with a quiet held-item harvest HUD. Use to refresh; passive scans every five seconds. No chat/action-bar spam or sounds.
+- **Growpost** — place on farmland or a solid surface, then right-click for its configuration GUI. Name your field, set a 1–16 block scan radius and 5–100% notification threshold, and individually toggle first-harvest, threshold and fully-grown alerts. Compact labeled chat messages go only to the owner, once per milestone until readiness falls below it. Outputs readiness as redstone/comparator strength 0–15. Optional trample protection and Growth Lamp interlock are saved per post. Non-owners can view but cannot edit.
 - **Growth Lamp** — detailed copper/jade crop lamp with animated lenses and growth particles.
 - **Chicken Coop** — visibly attracts eggs/feathers into nine real slots. Right-click to open its inventory and toggle egg hatching per coop. Eggs hatch after five seconds by default, without a random-chance roll. Collection continues with hatching off. Clear space beside or above the coop is required.
 - **Pasture Feeder** — nine slots for mixed breeding foods; right-click to manage inventory and toggle feeding. Feeds compatible adult pairs, not animals on breeding cooldown.
 - **Planter's Satchel** — redesigned Seed Pouch with nine persistent seed slots. Use in the air or sneak-use to open storage; use on farmland to plant. Supports wheat, beetroot, carrots, potatoes, melon and pumpkin.
 
-XP Siphon has been removed. Existing item IDs for the renamed compass, satchel and feeder are retained. Legacy coop/feeder contents migrate to real inventories.
+XP Siphon and the handheld Harvest Compass have been removed; old compass items do not migrate to Growposts. Satchel and feeder item IDs are retained. Legacy coop/feeder contents migrate to real inventories. Back up existing worlds before upgrading.
 Install the mod on **both client and server**. GUI progress/state and inventory transfers are server-authoritative.
 Editable source models are in `art/blockbench/`.
+
+Growpost scans ordinary farmland crops every five seconds. An empty or partially unloaded field does not report fully grown. Overlapping posts can each notify their own owner. Ripe crops already remain ripe in vanilla; trample protection protects their farmland, not against harvesting, explosions or every kind of mob interaction. Tests cover milestone deduplication and saved settings; GUI appearance and live gameplay loops still require in-game verification.
 
 ## Build
 ```bash
