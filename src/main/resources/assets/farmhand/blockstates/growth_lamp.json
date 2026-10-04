@@ -1,7 +1,6 @@
 {
   "variants": {
-    "": {
-      "model": "farmhand:block/growth_lamp"
-    }
+    "lit=true": { "model": "farmhand:block/growth_lamp" },
+    "lit=false": { "model": "farmhand:block/growth_lamp_off" }
   }
 }

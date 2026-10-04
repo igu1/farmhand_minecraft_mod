@@ -20,16 +20,23 @@ public class GrowthLampBlockEntity extends BlockEntity {
         super(Init.GROWTH_LAMP_BE.get(), pos, state);
     }
 
+    /** Manual power and automatic pause are separate: harvested fields may resume, switched-off lamps may not. */
+    public static boolean shouldIlluminate(boolean manual, boolean modEnabled, boolean lampEnabled, boolean paused) {
+        return manual && modEnabled && lampEnabled && !paused;
+    }
+
     public static void tick(Level level, BlockPos pos, BlockState state, GrowthLampBlockEntity lamp) {
-        if (!(level instanceof ServerLevel server)
-                || !Config.ENABLED.get() || !Config.LAMP_ENABLED.get()) {
-            return;
+        if (!(level instanceof ServerLevel server)) return;
+        boolean lit = shouldIlluminate(state.getValue(GrowthLampBlock.ENABLED), Config.ENABLED.get(),
+                Config.LAMP_ENABLED.get(), me.ez.farmhand.util.GrowpostRegistry.pausesLamp(level, pos));
+        if (state.getValue(GrowthLampBlock.LIT) != lit) {
+            level.setBlock(pos, state.setValue(GrowthLampBlock.LIT, lit), 3);
         }
+        if (!lit) return;
         if (--lamp.cooldown > 0) {
             return;
         }
         lamp.cooldown = Config.LAMP_INTERVAL.get();
-        if (me.ez.farmhand.util.GrowpostRegistry.pausesLamp(level, pos)) return;
 
         int radius = Config.LAMP_RADIUS.get();
         int chance = Config.LAMP_CHANCE.get();

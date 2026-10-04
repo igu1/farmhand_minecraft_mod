@@ -86,7 +86,7 @@ public class GrowpostBlockEntity extends BlockEntity implements MenuProvider {
             return;
         }
         if (--post.cooldown > 0) return;
-        post.cooldown = 100;
+        post.cooldown = 20;
         int ready = 0, total = 0;
         boolean complete = true;
         for (BlockPos cropPos : BlockPos.betweenClosed(pos.offset(-post.radius, -2, -post.radius), pos.offset(post.radius, 2, post.radius))) {

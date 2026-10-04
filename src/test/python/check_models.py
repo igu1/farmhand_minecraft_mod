@@ -24,3 +24,15 @@ for file in root.rglob('*.json'):
             assert all(0 <= uv <= 16 for uv in face.get('uv', [])), f'{file}: UV outside atlas'
     count += bool(elements)
 print(f'Passed geometry/UV checks for {count} detailed block and item models.')
+
+lamp_on = json.loads((root / 'block/growth_lamp.json').read_text())
+lamp_off = json.loads((root / 'block/growth_lamp_off.json').read_text())
+core_on = next(e for e in lamp_on['elements'] if e.get('name') == 'jade_core')
+core_off = next(e for e in lamp_off['elements'] if e.get('name') == 'jade_core')
+assert core_on.get('light_emission') == 15 and not core_on.get('shade', True), 'active jade core must glow'
+assert not core_off.get('light_emission', 0) and core_off.get('shade', True), 'off jade core must not glow'
+assert all(f['texture'] == '#unlit' for f in core_off['faces'].values()), 'off core needs the dim texture'
+for name in ('chicken_coop', 'animal_feeder'):
+    model = json.loads((root / f'block/{name}.json').read_text())
+    assert not any(e.get('name') in ('egg_left', 'egg_right', 'dry_feed') for e in model['elements']), 'no fake inventory contents'
+print('Passed lamp emissive/off-state and real-inventory model checks.')

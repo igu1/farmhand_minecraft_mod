@@ -25,6 +25,27 @@ import net.minecraft.world.inventory.ContainerInput;
 @ExtendWith(EphemeralTestServerProvider.class)
 public final class FarmhandRegressionTest {
     @Test
+    public void lampPowerAndInventoryRenderSync(MinecraftServer server) {
+        var lamp = Init.GROWTH_LAMP.get().defaultBlockState();
+        check(lamp.getValue(me.ez.farmhand.block.GrowthLampBlock.LIT), "new lamps illuminate");
+        check(lamp.getValue(me.ez.farmhand.block.GrowthLampBlock.ENABLED), "new lamps enabled");
+        var off = lamp.setValue(me.ez.farmhand.block.GrowthLampBlock.LIT, false)
+                .setValue(me.ez.farmhand.block.GrowthLampBlock.ENABLED, false);
+        check(off.getLightEmission() == 0 && lamp.getLightEmission() == 15, "lamp light follows actual lit state");
+        var coop = new ChickenCoopBlockEntity(BlockPos.ZERO, Init.CHICKEN_COOP.get().defaultBlockState());
+        coop.store(new ItemStack(Items.EGG, 7));
+        var tag = coop.getUpdateTag(server.registryAccess());
+        var clientCopy = new ChickenCoopBlockEntity(BlockPos.ZERO, coop.getBlockState());
+        clientCopy.loadWithComponents(net.minecraft.world.level.storage.TagValueInput.create(
+                net.minecraft.util.ProblemReporter.DISCARDING, server.registryAccess(), tag));
+        check(clientCopy.getItem(0).is(Items.EGG) && clientCopy.getItem(0).getCount() == 7, "render sync contains actual egg inventory");
+        coop.clearContent();
+        coop.setChanged();
+        clientCopy.loadWithComponents(net.minecraft.world.level.storage.TagValueInput.create(
+                net.minecraft.util.ProblemReporter.DISCARDING, server.registryAccess(), coop.getUpdateTag(server.registryAccess())));
+        check(clientCopy.isEmpty(), "render sync clears removed inventory items");
+    }
+    @Test
     public void growpostSettingsPersist(MinecraftServer server) {
         var state = Init.GROWPOST.get().defaultBlockState();
         var post = new me.ez.farmhand.block.GrowpostBlockEntity(BlockPos.ZERO, state);

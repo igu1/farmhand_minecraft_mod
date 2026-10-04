@@ -3,6 +3,9 @@ package me.ez.farmhand.block;
 import me.ez.farmhand.menu.MachineMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -43,6 +46,15 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity {
     public abstract int kind();
     protected abstract int cycleLength();
     public void toggle() { running = !running; setChanged(); }
+    @Override
+    public void setChanged() {
+        super.setChanged();
+        if (level != null && !level.isClientSide()) level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 2);
+    }
+    @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() { return ClientboundBlockEntityDataPacket.create(this); }
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) { return saveWithoutMetadata(registries); }
     public int getContainerSize() { return 9; }
     protected NonNullList<ItemStack> getItems() { return items; }
     protected void setItems(NonNullList<ItemStack> items) { this.items = items; }

@@ -352,6 +352,11 @@
           ],
           "texture": "#0"
         }
+      },
+      "light_emission": 15,
+      "shade": false,
+      "neoforge_data": {
+        "ambient_occlusion": false
       }
     },
     {

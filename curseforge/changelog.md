@@ -1,5 +1,9 @@
 # Farmhand — visual and inventory overhaul
 
+- Removed the separate creative tab; items use vanilla Functional Blocks and Tools & Utilities.
+- Growth Lamp right-click power, visible interlock shutoff, and active-only emissive jade texture.
+- Coop and feeder display synchronized real inventory contents instead of decorative eggs/feed.
+
 - Fixed overlapping model faces; added detailed editable Blockbench models.
 - Added real nine-slot coop and feeder inventories, animated GUIs and persistent per-machine toggles.
 - Eggs and feathers now move toward the coop before collection.

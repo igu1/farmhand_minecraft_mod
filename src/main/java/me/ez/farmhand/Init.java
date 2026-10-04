@@ -14,9 +14,7 @@ import me.ez.farmhand.menu.MachineMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -33,8 +31,6 @@ public final class Init {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(Main.MOD_ID);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
             DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, Main.MOD_ID);
-    public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS =
-            DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Main.MOD_ID);
     public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(Registries.MENU, Main.MOD_ID);
     public static final DeferredHolder<MenuType<?>, MenuType<MachineMenu>> MACHINE_MENU =
             MENUS.register("machine", () -> new MenuType<>(MachineMenu::new, FeatureFlags.DEFAULT_FLAGS));
@@ -48,7 +44,8 @@ public final class Init {
 
     public static final DeferredBlock<GrowthLampBlock> GROWTH_LAMP = BLOCKS.registerBlock(
             "growth_lamp", GrowthLampBlock::new,
-            props -> props.strength(1.5f).sound(SoundType.GLASS).lightLevel(state -> 15).noOcclusion());
+            props -> props.strength(1.5f).sound(SoundType.GLASS)
+                    .lightLevel(state -> state.getValue(GrowthLampBlock.LIT) ? 15 : 0).noOcclusion().forceSolidOff());
 
     public static final DeferredBlock<ChickenCoopBlock> CHICKEN_COOP = BLOCKS.registerBlock(
             "chicken_coop", ChickenCoopBlock::new,
@@ -86,20 +83,14 @@ public final class Init {
             BLOCK_ENTITIES.register("animal_feeder",
                     () -> new BlockEntityType<>(AnimalFeederBlockEntity::new, ANIMAL_FEEDER.get()));
 
-    // ---- Creative tab -------------------------------------------------------
-
-    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB = CREATIVE_TABS.register("farmhand",
-            () -> CreativeModeTab.builder()
-                    .title(Component.translatable("itemGroup.farmhand"))
-                    .icon(() -> new ItemStack(GROWPOST_ITEM.get()))
-                    .displayItems(Init::addTabContents)
-                    .build());
-
-    private static void addTabContents(CreativeModeTab.ItemDisplayParameters parameters, CreativeModeTab.Output output) {
-        output.accept(GROWTH_LAMP_ITEM.get());
-        output.accept(CHICKEN_COOP_ITEM.get());
-        output.accept(ANIMAL_FEEDER_ITEM.get());
-        output.accept(GROWPOST_ITEM.get());
-        output.accept(SEED_POUCH.get());
+    public static void creativeContents(net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent event) {
+        if (event.getTabKey().equals(CreativeModeTabs.FUNCTIONAL_BLOCKS)) {
+            event.accept(GROWTH_LAMP_ITEM.get());
+            event.accept(CHICKEN_COOP_ITEM.get());
+            event.accept(ANIMAL_FEEDER_ITEM.get());
+            event.accept(GROWPOST_ITEM.get());
+        } else if (event.getTabKey().equals(CreativeModeTabs.TOOLS_AND_UTILITIES)) {
+            event.accept(SEED_POUCH.get());
+        }
     }
 }
