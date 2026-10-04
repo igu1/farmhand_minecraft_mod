@@ -6,6 +6,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -21,6 +22,7 @@ public final class FarmUtil {
      */
     public static int[] scanCrops(ServerLevel level, BlockPos center, int radius) {
         int count = 0;
+        int total = 0;
         BlockPos nearest = null;
         double best = Double.MAX_VALUE;
         for (BlockPos pos : BlockPos.betweenClosed(
@@ -30,6 +32,7 @@ public final class FarmUtil {
                 continue;
             }
             BlockState state = level.getBlockState(pos);
+            if (state.getBlock() instanceof CropBlock) total++;
             if (state.getBlock() instanceof CropBlock crop && crop.isMaxAge(state)) {
                 count++;
                 double dx = pos.getX() - center.getX();
@@ -43,9 +46,9 @@ public final class FarmUtil {
             }
         }
         if (nearest == null) {
-            return new int[] {count, 0, 0, 0, 0};
+            return new int[] {count, 0, 0, 0, 0, total};
         }
-        return new int[] {count, nearest.getX(), nearest.getY(), nearest.getZ(), 1};
+        return new int[] {count, nearest.getX(), nearest.getY(), nearest.getZ(), 1, total};
     }
 
     /** The first plantable seed (a block item for a crop) in the player's inventory. */
@@ -53,12 +56,20 @@ public final class FarmUtil {
         Inventory inventory = player.getInventory();
         for (int slot = 0; slot < inventory.getContainerSize(); slot++) {
             ItemStack stack = inventory.getItem(slot);
-            if (!stack.isEmpty() && stack.getItem() instanceof BlockItem blockItem
-                    && blockItem.getBlock() instanceof CropBlock) {
+            if (!stack.isEmpty() && cropFor(stack) != null) {
                 return stack;
             }
         }
         return ItemStack.EMPTY;
+    }
+
+    /** Supports ordinary crop seeds as well as melon/pumpkin stems; berries are not farmland crops. */
+    public static Block cropFor(ItemStack seed) {
+        if (seed.getItem() instanceof BlockItem item
+                && (item.getBlock() instanceof CropBlock || item.getBlock() instanceof net.minecraft.world.level.block.StemBlock)) {
+            return item.getBlock();
+        }
+        return null;
     }
 
     /** Moves a stack into the player's inventory, dropping whatever does not fit. */

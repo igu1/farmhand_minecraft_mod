@@ -20,7 +20,7 @@ public class Config {
     public static final ModConfigSpec.BooleanValue COOP_ENABLED;
     public static final ModConfigSpec.IntValue COOP_RADIUS;
     public static final ModConfigSpec.BooleanValue COOP_INCUBATE;
-    public static final ModConfigSpec.IntValue COOP_INCUBATE_CHANCE;
+    public static final ModConfigSpec.IntValue COOP_INCUBATE_TICKS;
 
     public static final ModConfigSpec.BooleanValue FEEDER_ENABLED;
     public static final ModConfigSpec.IntValue FEEDER_RADIUS;
@@ -29,7 +29,6 @@ public class Config {
     public static final ModConfigSpec.IntValue POUCH_WIDTH;
     public static final ModConfigSpec.IntValue POUCH_DEPTH;
 
-    public static final ModConfigSpec.BooleanValue SIPHON_ENABLED;
 
     static {
         ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
@@ -39,8 +38,8 @@ public class Config {
                 .define("enabled", true);
         builder.pop();
 
-        builder.comment("Result Sentinel crop scanner").translation("farmhand.configuration.sentinel").push("sentinel");
-        SENTINEL_ENABLED = builder.comment("Enable the Result Sentinel").translation("farmhand.configuration.sentinel.enabled")
+        builder.comment("Harvest Compass crop scanner").translation("farmhand.configuration.sentinel").push("sentinel");
+        SENTINEL_ENABLED = builder.comment("Enable the Harvest Compass").translation("farmhand.configuration.sentinel.enabled")
                 .define("enabled", true);
         SENTINEL_RADIUS = builder.comment("Scan radius in blocks").translation("farmhand.configuration.sentinel.radius")
                 .defineInRange("radius", 12, 1, 48);
@@ -62,31 +61,26 @@ public class Config {
                 .define("enabled", true);
         COOP_RADIUS = builder.comment("Radius in blocks to collect eggs and feathers")
                 .translation("farmhand.configuration.chicken_coop.radius").defineInRange("radius", 6, 1, 16);
-        COOP_INCUBATE = builder.comment("Chance to hatch a stored egg into a chick")
+        COOP_INCUBATE = builder.comment("Default hatching toggle for new coops; each coop can be toggled in its GUI")
                 .translation("farmhand.configuration.chicken_coop.incubate").define("incubate", true);
-        COOP_INCUBATE_CHANCE = builder.comment("Percent chance per cycle to hatch one egg")
-                .translation("farmhand.configuration.chicken_coop.incubateChance").defineInRange("incubateChance", 8, 1, 100);
+        COOP_INCUBATE_TICKS = builder.comment("Ticks needed to incubate one egg (20 ticks = one second)")
+                .translation("farmhand.configuration.chicken_coop.incubateTicks").defineInRange("incubateTicks", 100, 20, 1200);
         builder.pop();
 
-        builder.comment("Animal Feeder").translation("farmhand.configuration.animal_feeder").push("animal_feeder");
-        FEEDER_ENABLED = builder.comment("Enable the Animal Feeder").translation("farmhand.configuration.animal_feeder.enabled")
+        builder.comment("Pasture Feeder").translation("farmhand.configuration.animal_feeder").push("animal_feeder");
+        FEEDER_ENABLED = builder.comment("Enable the Pasture Feeder").translation("farmhand.configuration.animal_feeder.enabled")
                 .define("enabled", true);
         FEEDER_RADIUS = builder.comment("Radius in blocks to feed animals").translation("farmhand.configuration.animal_feeder.radius")
                 .defineInRange("radius", 8, 1, 24);
         builder.pop();
 
-        builder.comment("Seed Pouch").translation("farmhand.configuration.seed_pouch").push("seed_pouch");
-        POUCH_ENABLED = builder.comment("Enable the Seed Pouch").translation("farmhand.configuration.seed_pouch.enabled")
+        builder.comment("Planter's Satchel").translation("farmhand.configuration.seed_pouch").push("seed_pouch");
+        POUCH_ENABLED = builder.comment("Enable the Planter's Satchel").translation("farmhand.configuration.seed_pouch.enabled")
                 .define("enabled", true);
         POUCH_WIDTH = builder.comment("Half-width of the planting plane").translation("farmhand.configuration.seed_pouch.width")
                 .defineInRange("width", 1, 0, 4);
         POUCH_DEPTH = builder.comment("Half-depth of the planting plane").translation("farmhand.configuration.seed_pouch.depth")
                 .defineInRange("depth", 1, 0, 4);
-        builder.pop();
-
-        builder.comment("Furnace XP Siphon").translation("farmhand.configuration.xp_siphon").push("xp_siphon");
-        SIPHON_ENABLED = builder.comment("Enable the XP Siphon").translation("farmhand.configuration.xp_siphon.enabled")
-                .define("enabled", true);
         builder.pop();
 
         SPEC = builder.build();

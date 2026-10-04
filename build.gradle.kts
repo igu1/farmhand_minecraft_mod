@@ -20,6 +20,10 @@ neoForge {
             sourceSet(sourceSets.main.get())
         }
     }
+    unitTest {
+        enable()
+        testedMod = mods.getByName(property("mod.id") as String)
+    }
 
     runs {
         register("client") {
@@ -29,6 +33,11 @@ neoForge {
         register("server") {
             gameDirectory = rootProject.file("run")
             server()
+        }
+        register("clientQa") {
+            gameDirectory = rootProject.file("run-qa")
+            client()
+            programArguments.addAll("--quickPlaySingleplayer", "QA")
         }
         register("clientData") {
             gameDirectory = rootProject.file("run")
@@ -44,8 +53,19 @@ neoForge {
 sourceSets.main {
     resources.srcDir("src/generated/resources")
 }
+dependencies {
+    testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
+    testImplementation("net.neoforged:testframework:${property("deps.neo_loader")}")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.11.4")
+}
 
 tasks {
+    val modelRegressionTest = register<Exec>("modelRegressionTest") {
+        group = "verification"
+        commandLine("python3", rootProject.file("src/test/python/check_models.py"))
+    }
+    named("check") { dependsOn(modelRegressionTest) }
+    named<Test>("test") { useJUnitPlatform() }
     // Stonecutter must process the sources before Minecraft artifacts are built.
     named("createMinecraftArtifacts") {
         dependsOn("stonecutterGenerate")
@@ -72,7 +92,7 @@ tasks {
 
     // The runs read resources from the projects folder, so make sure processResources
     // runs before they start.
-    listOf("clientData", "client", "server").forEach { runName ->
+    listOf("clientData", "client", "clientQa", "server").forEach { runName ->
         named("prepare${runName.replaceFirstChar { it.uppercase() }}Run") {
             dependsOn("processResources")
         }

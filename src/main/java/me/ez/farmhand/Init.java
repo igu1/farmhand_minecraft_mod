@@ -8,7 +8,9 @@ import me.ez.farmhand.block.GrowthLampBlock;
 import me.ez.farmhand.block.GrowthLampBlockEntity;
 import me.ez.farmhand.item.ResultSentinelItem;
 import me.ez.farmhand.item.SeedPouchItem;
-import me.ez.farmhand.item.XpSiphonItem;
+import me.ez.farmhand.menu.MachineMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -31,20 +33,23 @@ public final class Init {
             DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, Main.MOD_ID);
     public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS =
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Main.MOD_ID);
+    public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(Registries.MENU, Main.MOD_ID);
+    public static final DeferredHolder<MenuType<?>, MenuType<MachineMenu>> MACHINE_MENU =
+            MENUS.register("machine", () -> new MenuType<>(MachineMenu::new, FeatureFlags.DEFAULT_FLAGS));
 
     // ---- Blocks -------------------------------------------------------------
 
     public static final DeferredBlock<GrowthLampBlock> GROWTH_LAMP = BLOCKS.registerBlock(
             "growth_lamp", GrowthLampBlock::new,
-            props -> props.strength(1.5f).sound(SoundType.GLASS).lightLevel(state -> 15));
+            props -> props.strength(1.5f).sound(SoundType.GLASS).lightLevel(state -> 15).noOcclusion());
 
     public static final DeferredBlock<ChickenCoopBlock> CHICKEN_COOP = BLOCKS.registerBlock(
             "chicken_coop", ChickenCoopBlock::new,
-            props -> props.strength(2.5f).sound(SoundType.WOOD));
+            props -> props.strength(2.5f).sound(SoundType.WOOD).noOcclusion());
 
     public static final DeferredBlock<AnimalFeederBlock> ANIMAL_FEEDER = BLOCKS.registerBlock(
             "animal_feeder", AnimalFeederBlock::new,
-            props -> props.strength(2.0f).sound(SoundType.WOOD));
+            props -> props.strength(2.0f).sound(SoundType.WOOD).noOcclusion());
 
     public static final DeferredItem<net.minecraft.world.item.BlockItem> GROWTH_LAMP_ITEM =
             ITEMS.registerSimpleBlockItem("growth_lamp", GROWTH_LAMP);
@@ -59,8 +64,6 @@ public final class Init {
             "result_sentinel", ResultSentinelItem::new, props -> props.stacksTo(1));
     public static final DeferredItem<SeedPouchItem> SEED_POUCH = ITEMS.registerItem(
             "seed_pouch", SeedPouchItem::new, props -> props.stacksTo(1));
-    public static final DeferredItem<XpSiphonItem> XP_SIPHON = ITEMS.registerItem(
-            "xp_siphon", XpSiphonItem::new, props -> props.stacksTo(1));
 
     // ---- Block entities -----------------------------------------------------
 
@@ -91,6 +94,5 @@ public final class Init {
         output.accept(ANIMAL_FEEDER_ITEM.get());
         output.accept(RESULT_SENTINEL.get());
         output.accept(SEED_POUCH.get());
-        output.accept(XP_SIPHON.get());
     }
 }

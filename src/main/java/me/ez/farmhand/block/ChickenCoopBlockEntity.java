@@ -2,146 +2,100 @@ package me.ez.farmhand.block;
 
 import me.ez.farmhand.Config;
 import me.ez.farmhand.Init;
-import me.ez.farmhand.util.FarmUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.chicken.Chicken;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
-/** Absorbs egg/feather item entities in range and can hatch a stored egg. */
-public class ChickenCoopBlockEntity extends BlockEntity {
-
-    private static final int CAPACITY = 64;
-
-    private int eggs;
-    private int feathers;
-    private int cooldown;
-
+/** Visible item attraction followed by real inventory storage and optional incubation. */
+public class ChickenCoopBlockEntity extends MachineBlockEntity {
     public ChickenCoopBlockEntity(BlockPos pos, BlockState state) {
         super(Init.CHICKEN_COOP_BE.get(), pos, state);
+        running = Config.COOP_INCUBATE.get();
+        cooldown = cycleLength();
     }
+    public int kind() { return 0; }
+    protected int cycleLength() { return Config.COOP_INCUBATE_TICKS.get(); }
+    protected Component getDefaultName() { return Component.translatable("block.farmhand.chicken_coop"); }
+    public boolean canPlaceItem(int slot, ItemStack stack) { return stack.is(Items.EGG) || stack.is(Items.FEATHER); }
 
     public static void tick(Level level, BlockPos pos, BlockState state, ChickenCoopBlockEntity coop) {
-        if (!(level instanceof ServerLevel server)
-                || !Config.ENABLED.get() || !Config.COOP_ENABLED.get()) {
-            return;
-        }
-        if (--coop.cooldown > 0) {
-            return;
-        }
-        coop.cooldown = 20;
-
-        AABB box = new AABB(pos).inflate(Config.COOP_RADIUS.get());
-        for (ItemEntity item : level.getEntitiesOfClass(ItemEntity.class, box)) {
+        if (!(level instanceof ServerLevel server)) return;
+        if (!Config.ENABLED.get() || !Config.COOP_ENABLED.get()) { coop.status = 3; return; }
+        Vec3 target = new Vec3(pos.getX() + .5, pos.getY() + .45, pos.getZ() + .5);
+        for (ItemEntity item : level.getEntitiesOfClass(ItemEntity.class, new AABB(pos).inflate(Config.COOP_RADIUS.get()))) {
             ItemStack stack = item.getItem();
-            if (stack.isEmpty()) {
-                continue;
-            }
-            if (stack.getItem() == Items.EGG) {
-                int moved = coop.absorb(stack, true);
-                if (moved > 0) {
-                    coop.applyAbsorb(stack, moved, true);
-                    coop.consume(item, stack);
-                }
-            } else if (stack.getItem() == Items.FEATHER) {
-                int moved = coop.absorb(stack, false);
-                if (moved > 0) {
-                    coop.applyAbsorb(stack, moved, false);
-                    coop.consume(item, stack);
-                }
+            if (stack.isEmpty() || !coop.canPlaceItem(0, stack) || coop.roomFor(stack) == 0) continue;
+            Vec3 offset = target.subtract(item.position());
+            if (offset.lengthSqr() > 1.15 * 1.15) {
+                item.setDeltaMovement(offset.normalize().scale(.22).add(0, .04, 0));
+                item.hurtMarked = true;
+            } else {
+                ItemStack remainder = stack.copy();
+                coop.store(remainder);
+                if (remainder.isEmpty()) item.discard(); else item.setItem(remainder);
+                server.sendParticles(ParticleTypes.POOF, target.x, target.y, target.z, 2, .1, .1, .1, .005);
             }
         }
-
-        if (Config.COOP_INCUBATE.get() && coop.eggs > 0
-                && level.getRandom().nextInt(100) < Config.COOP_INCUBATE_CHANCE.get()) {
-            coop.hatch(server, pos);
-        }
-        coop.setChanged();
-    }
-
-    private int absorb(ItemStack stack, boolean egg) {
-        int stored = egg ? eggs : feathers;
-        return Math.min(stack.getCount(), Math.max(0, CAPACITY - stored));
-    }
-
-    private void applyAbsorb(ItemStack stack, int moved, boolean egg) {
-        if (egg) {
-            eggs += moved;
-        } else {
-            feathers += moved;
-        }
-        stack.shrink(moved);
-    }
-
-    private void consume(ItemEntity item, ItemStack stack) {
-        if (stack.isEmpty()) {
-            item.discard();
-        } else {
-            item.setItem(stack);
-        }
-    }
-
-    private void hatch(ServerLevel level, BlockPos pos) {
-        Chicken chick = EntityType.CHICKEN.create(level, EntitySpawnReason.BREEDING);
-        if (chick == null) {
+        if (!coop.running) {
+            coop.status = 3;
+            coop.cooldown = coop.cycleLength();
             return;
         }
-        eggs--;
-        chick.setBaby(true);
-        chick.snapTo(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5, level.getRandom().nextFloat() * 360f, 0f);
-        level.addFreshEntity(chick);
-    }
-
-    /** Hands the stored contents to the player (or drops them at the block). */
-    public void dispense(Player player) {
-        if (eggs > 0) {
-            FarmUtil.giveOrDrop(player, new ItemStack(Items.EGG, eggs));
-            eggs = 0;
-        }
-        if (feathers > 0) {
-            FarmUtil.giveOrDrop(player, new ItemStack(Items.FEATHER, feathers));
-            feathers = 0;
-        }
-        setChanged();
-    }
-
-    public void dropContents() {
-        if (level == null || level.isClientSide()) {
+        if (coop.items.stream().noneMatch(stack -> stack.is(Items.EGG) && !stack.isEmpty())) {
+            coop.status = 0;
+            coop.cooldown = coop.cycleLength();
             return;
         }
-        if (eggs > 0) {
-            Block.popResource(level, worldPosition, new ItemStack(Items.EGG, eggs));
-            eggs = 0;
-        }
-        if (feathers > 0) {
-            Block.popResource(level, worldPosition, new ItemStack(Items.FEATHER, feathers));
-            feathers = 0;
+        if (coop.status != 2) coop.status = 1;
+        if (--coop.cooldown > 0) return;
+        coop.cooldown = coop.cycleLength();
+        for (int slot = 0; slot < 9; slot++) {
+            if (!coop.items.get(slot).is(Items.EGG)) continue;
+            var chick = EntityType.CHICKEN.create(server, EntitySpawnReason.BREEDING);
+            if (chick == null) return;
+            chick.setBaby(true);
+            boolean room = false;
+            double[][] candidates = {{.5, 0, -.6}, {.5, 0, 1.6}, {-.6, 0, .5}, {1.6, 0, .5}, {.5, 1.05, .5}};
+            for (double[] offset : candidates) {
+                chick.snapTo(pos.getX() + offset[0], pos.getY() + offset[1], pos.getZ() + offset[2], 0, 0);
+                if (server.noCollision(chick)) { room = true; break; }
+            }
+            if (!room) { coop.status = 2; coop.cooldown = 20; return; }
+            if (server.addFreshEntity(chick)) {
+                coop.items.get(slot).shrink(1);
+                coop.operations++;
+                coop.setChanged();
+                server.sendParticles(ParticleTypes.HAPPY_VILLAGER, chick.getX(), chick.getY() + .4, chick.getZ(), 4, .2, .1, .2, .01);
+            }
+            return;
         }
     }
 
-    @Override
-    protected void saveAdditional(ValueOutput output) {
-        output.putInt("Eggs", eggs);
-        output.putInt("Feathers", feathers);
-        super.saveAdditional(output);
-    }
-
-    @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
-        eggs = input.getIntOr("Eggs", 0);
-        feathers = input.getIntOr("Feathers", 0);
+        cooldown = Math.max(1, Math.min(cycleLength(), input.getIntOr("IncubationRemaining", cycleLength())));
+        // Migrate the original counter-based inventory without duplicating new-format saves.
+        if (items.stream().allMatch(ItemStack::isEmpty)) {
+            int eggs = input.getIntOr("Eggs", 0), feathers = input.getIntOr("Feathers", 0);
+            if (eggs > 0) store(new ItemStack(Items.EGG, Math.min(64, eggs)));
+            if (feathers > 0) store(new ItemStack(Items.FEATHER, Math.min(64, feathers)));
+        }
+    }
+
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+        output.putInt("IncubationRemaining", Math.max(1, cooldown));
     }
 }

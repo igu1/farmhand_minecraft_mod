@@ -4,6 +4,9 @@ import com.mojang.serialization.MapCodec;
 import me.ez.farmhand.Init;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -13,6 +16,12 @@ import org.jetbrains.annotations.Nullable;
 
 /** A glowing block that periodically bone-meals crops around it. */
 public class GrowthLampBlock extends BaseEntityBlock {
+    private static final VoxelShape SHAPE = box(2, 0, 2, 14, 16, 14);
+
+    @Override
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return SHAPE;
+    }
 
     public GrowthLampBlock(Properties properties) {
         super(properties);

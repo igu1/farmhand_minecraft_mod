@@ -3,6 +3,7 @@ package me.ez.farmhand.block;
 import me.ez.farmhand.Config;
 import me.ez.farmhand.Init;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
@@ -47,6 +48,12 @@ public class GrowthLampBlockEntity extends BlockEntity {
                     && random.nextInt(100) < chance
                     && crop.isValidBonemealTarget(level, target, cropState)) {
                 crop.performBonemeal(server, random, target, cropState);
+                server.sendParticles(ParticleTypes.HAPPY_VILLAGER,
+                        target.getX() + 0.5, target.getY() + 0.8, target.getZ() + 0.5,
+                        3, 0.2, 0.15, 0.2, 0.01);
+                server.sendParticles(ParticleTypes.GLOW,
+                        pos.getX() + 0.5, pos.getY() + 0.65, pos.getZ() + 0.5,
+                        1, 0.15, 0.2, 0.15, 0.01);
             }
         }
     }

@@ -15,6 +15,7 @@ public class Main {
         Init.BLOCK_ENTITIES.register(modEventBus);
         Init.CREATIVE_TABS.register(modEventBus);
         Init.ITEMS.register(modEventBus);
+        Init.MENUS.register(modEventBus);
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 }

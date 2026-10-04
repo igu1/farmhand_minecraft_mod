@@ -2,44 +2,41 @@
 
 **Let the farm run itself.**
 
-**Released — version 1.0.0+26.1.2.**
+**Development build — version 1.0.0+26.1.2. Gameplay verification is still in progress.**
 
-Six farm machines and tools: crop maturity scanner, growth lamp, chicken coop, animal feeder, seed pouch and a furnace XP siphon. Works in single-player and on servers.
+Five detailed farm machines and tools, with real inventories, quiet harvest surveys and portable seed storage.
 
 ## Features
 
-### Result Sentinel
-A handheld scanner. Right-click to list how many crops are ready to harvest and where the nearest one is; it also pings automatically while you hold it.
+### Harvest Compass
+A redesigned handheld crop scanner with a quiet, animated HUD while held. Shows ready crops and the nearest harvest distance without sounds or repeated action-bar alerts.
 
 ### Growth Lamp
 A glowing block that bone-meals nearby crops over time. Radius, chance and speed are configurable.
 
 ### Chicken Coop
-Collects dropped eggs and feathers in range. Right-click to empty it, and it can hatch a stored egg into a chick.
+Pulls nearby dropped eggs and feathers visibly toward its nine-slot inventory. Right-click to manage stored items and toggle egg hatching for this coop. Eggs hatch after five seconds by default, without a random-chance roll. Collection remains active when hatching is off. Leave clear space beside or above the coop.
 
-### Animal Feeder
-Right-click with breeding food to store it, then it feeds nearby adult animals. Right-click empty-handed to take the food back.
+### Pasture Feeder
+Right-click to open its nine-slot mixed-food inventory and feeding toggle. Feeds compatible adult pairs and respects breeding cooldowns.
 
-### Seed Pouch
-Right-click farmland to plant a plane of seeds from your inventory in one go.
-
-### XP Siphon
-Right-click a furnace to collect the experience it has stored up.
+### Planter's Satchel
+Nine persistent slots for crop seeds. Use in the air or sneak-use to open storage; use on farmland to plant an area. Falls back to seeds in your player inventory when its own storage is empty.
 
 ## Configuration
 
-Every machine has an enable toggle and its own radius, chance or interval in the common config (config/farmhand-common.toml) or the in-game mod settings.
+Radius, chance and interval settings are in `config/farmhand-common.toml`. The coop and feeder also have per-machine GUI toggles.
 
 ## Keybinds
 
-_Keybinds will be announced with the first release._
+No extra keybinds required. Right-click machines to open their inventories.
 
 ## Requirements
 
 - **Minecraft 26.1.2**
 - **NeoForge 26.1.2.108 or newer**
 - **Java 25** (bundled with Minecraft 26.1)
-- Works in single-player and on servers. Client-side is optional but recommended for the item models.
+- Install on both client and server: custom blocks, items and synchronized inventories require it.
 
 ## Installation
 
@@ -49,7 +46,7 @@ _Keybinds will be announced with the first release._
 
 ## Compatibility
 
-- Works in single-player and on any server (client-side where noted).
+- Works in single-player and on servers with Farmhand installed.
 - Should be compatible with most other mods. Please report conflicts in the issue tracker.
 
 ## Links

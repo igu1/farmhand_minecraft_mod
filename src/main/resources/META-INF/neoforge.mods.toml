@@ -10,7 +10,7 @@ version="${file.jarVersion}"
 displayName="Farmhand"
 authors="Love, Cheese By Ez"
 description='''
-   Farming automation: result sentinel, animal feeder, chicken coop, growth lamp, seed pouch and furnace XP recovery.
+   Detailed farm machines, quiet Harvest Compass surveys and a portable Planter's Satchel.
 '''
 
 [[dependencies.farmhand]]

@@ -20,12 +20,14 @@ build
 # other
 eclipse
 run
+run-qa/
 
 # local editor config
 .vscode/
 
 # art sources and build tooling (not part of the shipped mod)
-art/
+art/*
+!art/blockbench/
 tools/
 
 # generated datagen cache
