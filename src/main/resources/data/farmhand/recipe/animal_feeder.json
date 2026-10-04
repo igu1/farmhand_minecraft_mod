@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": "minecraft:oak_planks",
+    "H": "minecraft:hay_block"
+  },
+  "pattern": [
+    "P P",
+    "PHP",
+    "PPP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "farmhand:animal_feeder"
+  }
+}

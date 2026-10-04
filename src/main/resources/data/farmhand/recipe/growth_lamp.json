@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": "minecraft:glass",
+    "L": "minecraft:glowstone",
+    "I": "minecraft:iron_ingot"
+  },
+  "pattern": [
+    "GGG",
+    "GLG",
+    "III"
+  ],
+  "result": {
+    "count": 1,
+    "id": "farmhand:growth_lamp"
+  }
+}

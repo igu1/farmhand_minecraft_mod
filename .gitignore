@@ -1,0 +1,38 @@
+# eclipse
+bin
+*.launch
+.settings
+.metadata
+.classpath
+.project
+
+# idea
+out
+*.ipr
+*.iws
+*.iml
+.idea
+
+# gradle
+build
+.gradle
+
+# other
+eclipse
+run
+
+# local editor config
+.vscode/
+
+# art sources and build tooling (not part of the shipped mod)
+art/
+tools/
+
+# generated datagen cache
+src/generated/resources/.cache/
+
+# collected release builds
+builds/
+
+# stonecutter-generated per-version build trees (regenerated from src/)
+versions/

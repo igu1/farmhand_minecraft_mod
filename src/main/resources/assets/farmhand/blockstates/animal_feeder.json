@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "farmhand:block/animal_feeder"
+    }
+  }
+}

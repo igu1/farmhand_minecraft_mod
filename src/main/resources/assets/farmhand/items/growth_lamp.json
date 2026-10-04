@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "farmhand:block/growth_lamp"
+  }
+}

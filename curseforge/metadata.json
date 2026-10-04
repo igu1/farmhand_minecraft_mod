@@ -1,0 +1,27 @@
+{
+  "name": "Farmhand",
+  "slug": "farmhand",
+  "modId": "farmhand",
+  "version": "1.0.0+26.1.2",
+  "summary": "Six farm machines and tools: crop maturity scanner, growth lamp, chicken coop, animal feeder, seed pouch and a furnace XP siphon. Works in single-player and on servers.",
+  "tagline": "Let the farm run itself.",
+  "categories": [
+    "Utility & QoL",
+    "Food"
+  ],
+  "gameVersion": "26.1.2",
+  "modLoader": "NeoForge",
+  "neoforgeVersion": "26.1.2.108",
+  "javaVersion": 25,
+  "license": "All Rights Reserved",
+  "authors": [
+    "Love, Cheese By Ez"
+  ],
+  "side": "Client",
+  "repo": "https://github.com/igu1/farmhand_minecraft_mod",
+  "issueTracker": "https://github.com/igu1/farmhand_minecraft_mod/issues",
+  "logo": "logo.png",
+  "releaseType": "release",
+  "artifact": "builds/26.1.2-neoforge/farmhand-1.0.0+26.1.2.jar",
+  "status": "Released 1.0.0"
+}

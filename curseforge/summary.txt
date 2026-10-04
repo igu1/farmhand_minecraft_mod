@@ -1,0 +1,1 @@
+Six farm machines and tools: crop maturity scanner, growth lamp, chicken coop, animal feeder, seed pouch and a furnace XP siphon. Works in single-player and on servers.

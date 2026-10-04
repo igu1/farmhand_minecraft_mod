@@ -1,0 +1,9 @@
+mod.id = "farmhand"
+mod.name = "Farmhand"
+mod.group = "me.ez.farmhand"
+mod.version = "1.0.0"
+
+["26.1.2"]
+mod.mc_compat = "[26.1, 26.1.2]"
+mod.mc_releases = ["26.1", "26.1.1", "26.1.2"]
+deps.neo_loader = "26.1.2.108"

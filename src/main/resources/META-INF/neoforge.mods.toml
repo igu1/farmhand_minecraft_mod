@@ -1,0 +1,28 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="All rights reserved"
+issueTrackerURL="https://github.com/igu1/"
+
+[[mods]]
+modId="farmhand"
+logoFile="logo.png"
+version="${file.jarVersion}"
+displayName="Farmhand"
+authors="Love, Cheese By Ez"
+description='''
+   Farming automation: result sentinel, animal feeder, chicken coop, growth lamp, seed pouch and furnace XP recovery.
+'''
+
+[[dependencies.farmhand]]
+modId="neoforge"
+type="required"
+versionRange="[26.1,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.farmhand]]
+modId="minecraft"
+type="required"
+versionRange="[26.1,26.1.2]"
+ordering="NONE"
+side="BOTH"
