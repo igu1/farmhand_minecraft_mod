@@ -21,7 +21,7 @@ Pulls nearby dropped eggs and feathers visibly toward its nine-slot inventory. R
 Displays actual stored food inside its trough; the coop also displays stored items inside its nest. Right-click to open its nine-slot mixed-food inventory and feeding toggle. Feeds compatible adult pairs and respects breeding cooldowns.
 
 ### Planter's Satchel
-Nine persistent slots for crop seeds. Use in the air or sneak-use to open storage; use on farmland to plant an area. Falls back to seeds in your player inventory when its own storage is empty.
+Nine persistent slots for crop seeds. Use in the air or sneak-use to open storage; use on farmland to plant an area. Falls back to seeds in your player inventory when its own storage is empty. Replanting wakes a covering Growpost, so an interlock-paused Growth Lamp lights again immediately.
 
 ## Configuration
 

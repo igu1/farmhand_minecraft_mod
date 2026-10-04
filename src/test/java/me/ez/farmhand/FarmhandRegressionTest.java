@@ -57,6 +57,10 @@ public final class FarmhandRegressionTest {
         check(loaded.setting(0) == 9 && loaded.setting(1) == 55, "per-post radius and threshold survive reload");
         check(loaded.setting(2) == 0 && loaded.setting(5) == 0 && loaded.setting(6) == 0, "alerts and helper settings survive reload");
         check(!state.isSolid(), "Growpost must not turn its farmland support into dirt");
+        check(post.covers(BlockPos.ZERO), "post covers its own position");
+        check(!post.covers(BlockPos.ZERO.offset(10, 0, 10)), "post coverage is bounded");
+        post.requestScan();
+        check(true, "replant wake request is safe without a level");
         check(loaded.owner() == null, "loading does not silently assign an owner");
         check(!loaded.canEdit(null), "unowned post cannot authorize arbitrary editing");
     }

@@ -71,6 +71,8 @@ public class GrowpostBlockEntity extends BlockEntity implements MenuProvider {
         return Math.abs(pos.getX() - worldPosition.getX()) <= radius && Math.abs(pos.getZ() - worldPosition.getZ()) <= radius
                 && Math.abs(pos.getY() - worldPosition.getY()) <= 3;
     }
+    /** Force the next tick to rescan, so replanted fields release a paused Growth Lamp immediately. */
+    public void requestScan() { cooldown = 0; }
     public boolean protects(BlockPos pos) { return protect && covers(pos); }
     public boolean pausesLamp(BlockPos pos) { return interlock && total > 0 && ready >= total && covers(pos); }
     public void onLoad() { super.onLoad(); if (level != null && !level.isClientSide()) GrowpostRegistry.add(level, worldPosition); }

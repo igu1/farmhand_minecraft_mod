@@ -20,6 +20,15 @@ public final class GrowpostRegistry {
     public static void add(Level level, BlockPos pos) { POSTS.computeIfAbsent(level, unused -> new HashSet<>()).add(pos.immutable()); }
     public static void remove(Level level, BlockPos pos) { var posts = POSTS.get(level); if (posts != null) posts.remove(pos); }
     public static boolean pausesLamp(Level level, BlockPos pos) { return matches(level, pos, true); }
+    /** Rescan covering posts now, so an interlock-paused lamp relights as soon as seeds are replanted. */
+    public static void wake(Level level, BlockPos pos) {
+        var posts = POSTS.get(level);
+        if (posts == null) return;
+        for (BlockPos postPos : posts) {
+            if (!level.hasChunkAt(postPos)) continue;
+            if (level.getBlockEntity(postPos) instanceof GrowpostBlockEntity post && post.covers(pos)) post.requestScan();
+        }
+    }
     private static boolean matches(Level level, BlockPos pos, boolean lamp) {
         if (!Config.ENABLED.get()) return false;
         var posts = POSTS.get(level);

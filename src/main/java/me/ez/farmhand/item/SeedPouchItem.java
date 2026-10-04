@@ -63,6 +63,7 @@ public class SeedPouchItem extends Item {
                 if (level.setBlockAndUpdate(target, crop.defaultBlockState())) {
                     if (!player.isCreative()) seed.shrink(1);
                     planted++;
+                    me.ez.farmhand.util.GrowpostRegistry.wake(level, target);
                     ((ServerLevel) level).sendParticles(ParticleTypes.HAPPY_VILLAGER,
                             target.getX() + .5, target.getY() + .2, target.getZ() + .5, 1, .1, .1, .1, .005);
                 }
