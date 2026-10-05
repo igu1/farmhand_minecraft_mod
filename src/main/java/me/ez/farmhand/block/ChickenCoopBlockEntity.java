@@ -33,6 +33,7 @@ public class ChickenCoopBlockEntity extends MachineBlockEntity {
     public static void tick(Level level, BlockPos pos, BlockState state, ChickenCoopBlockEntity coop) {
         if (!(level instanceof ServerLevel server)) return;
         if (!Config.ENABLED.get() || !Config.COOP_ENABLED.get()) { coop.status = 3; return; }
+        if (coop.redstonePaused()) { coop.status = 4; return; }
         Vec3 target = new Vec3(pos.getX() + .5, pos.getY() + .45, pos.getZ() + .5);
         for (ItemEntity item : level.getEntitiesOfClass(ItemEntity.class, new AABB(pos).inflate(Config.COOP_RADIUS.get()))) {
             ItemStack stack = item.getItem();

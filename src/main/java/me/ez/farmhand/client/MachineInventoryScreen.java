@@ -66,7 +66,7 @@ public final class MachineInventoryScreen extends AbstractContainerScreen<Machin
         g.text(font, playerInventoryTitle, 8, 104, 0xffb2c7ab, false);
         if (menu.kind() == 2) g.text(font, Component.translatable("farmhand.menu.plant_hint"), 8, 89, 0xffa6c67c, false);
         else if (menu.kind() == 0) g.text(font, Component.translatable("farmhand.menu.coop_status." + menu.status()), 8, 89, 0xffa6c67c, false);
-        else g.text(font, Component.translatable("farmhand.menu.feeder_hint"), 8, 89, 0xffa6c67c, false);
+        else g.text(font, Component.translatable(menu.status() == 4 ? "farmhand.menu.redstone_paused" : "farmhand.menu.feeder_hint"), 8, 89, 0xffa6c67c, false);
         g.text(font, Component.translatable("farmhand.menu.shift_hint"), 8, 199, 0xff819a83, false);
     }
 

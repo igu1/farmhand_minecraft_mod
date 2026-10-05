@@ -44,6 +44,8 @@ public abstract class MachineBlockEntity extends BaseContainerBlockEntity {
     }
 
     public abstract int kind();
+    /** Redstone is a temporary override, never changes the saved GUI switch. */
+    public boolean redstonePaused() { return level != null && level.hasNeighborSignal(worldPosition); }
     protected abstract int cycleLength();
     public void toggle() { running = !running; setChanged(); }
     @Override

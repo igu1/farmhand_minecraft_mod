@@ -60,6 +60,8 @@
   "farmhand.menu.shift_hint": "Shift-click to transfer items",
   "farmhand.menu.plant_hint": "Use on farmland to plant",
   "farmhand.menu.feeder_hint": "Feeds compatible adult pairs",
+  "farmhand.menu.redstone_paused": "Paused by redstone power",
+  "farmhand.menu.coop_status.4": "Paused by redstone power",
   "farmhand.menu.coop_status.0": "Add eggs to incubate",
   "farmhand.menu.coop_status.1": "Incubating eggs",
   "farmhand.menu.coop_status.2": "Needs space to hatch a chick",

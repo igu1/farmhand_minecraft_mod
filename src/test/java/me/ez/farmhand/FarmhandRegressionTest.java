@@ -25,6 +25,36 @@ import net.minecraft.world.inventory.ContainerInput;
 @ExtendWith(EphemeralTestServerProvider.class)
 public final class FarmhandRegressionTest {
     @Test
+    public void feederAndCoopRedstonePause(MinecraftServer server) {
+        BlockPos pos = new BlockPos(32, 100, 32);
+        boolean[] power = {false};
+        var feeder = new AnimalFeederBlockEntity(pos, Init.ANIMAL_FEEDER.get().defaultBlockState()) {
+            public boolean redstonePaused() { return power[0]; }
+        };
+        feeder.store(new ItemStack(Items.WHEAT, 8));
+        check(feeder.active(), "unpowered feeder active");
+        power[0] = true;
+        check(feeder.redstonePaused() && !feeder.active(), "redstone disables attraction and feeding");
+        check(feeder.getItem(0).getCount() == 8, "pause preserves food");
+        power[0] = false;
+        check(feeder.active(), "removing power resumes feeder");
+        feeder.toggle();
+        power[0] = true;
+        power[0] = false;
+        check(!feeder.active(), "redstone does not overwrite manual switch");
+        var coop = new ChickenCoopBlockEntity(pos, Init.CHICKEN_COOP.get().defaultBlockState()) {
+            public boolean redstonePaused() { return power[0]; }
+        };
+        coop.store(new ItemStack(Items.EGG, 3));
+        var before = coop.saveWithFullMetadata(server.registryAccess());
+        power[0] = true;
+        var after = coop.saveWithFullMetadata(server.registryAccess());
+        check(coop.redstonePaused() && coop.getItem(0).getCount()==3, "coop power override preserves stock");
+        check(before.getIntOr("IncubationRemaining",0)==after.getIntOr("IncubationRemaining",-1), "incubation progress frozen");
+        power[0] = false;
+        check(!coop.redstonePaused(), "coop override releases when power removed");
+    }
+    @Test
     public void lampPowerAndInventoryRenderSync(MinecraftServer server) {
         var lamp = Init.GROWTH_LAMP.get().defaultBlockState();
         check(lamp.getValue(me.ez.farmhand.block.GrowthLampBlock.LIT), "new lamps illuminate");

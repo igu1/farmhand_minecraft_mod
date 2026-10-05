@@ -28,17 +28,32 @@ public class AnimalFeederBlockEntity extends MachineBlockEntity {
                 || s.is(ItemTags.ARMADILLO_FOOD);
     }
     public boolean canPlaceItem(int slot, ItemStack stack) { return isAnimalFood(stack); }
+    public boolean active() { return Config.ENABLED.get() && Config.FEEDER_ENABLED.get() && running && !redstonePaused(); }
+    public boolean hasFoodFor(Animal animal) { return items.stream().anyMatch(s -> !s.isEmpty() && animal.isFood(s)); }
+    public void onLoad() {
+        super.onLoad();
+        if (level != null && !level.isClientSide()) me.ez.farmhand.util.FeederRegistry.add(level,worldPosition);
+    }
+    public void setRemoved() {
+        if (level != null && !level.isClientSide()) me.ez.farmhand.util.FeederRegistry.remove(level,worldPosition);
+        super.setRemoved();
+    }
 
     public static void tick(Level level, BlockPos pos, BlockState state, AnimalFeederBlockEntity feeder) {
-        if (!(level instanceof ServerLevel) || !Config.ENABLED.get() || !Config.FEEDER_ENABLED.get() || !feeder.running) return;
+        if (!(level instanceof ServerLevel)) return;
+        me.ez.farmhand.util.FeederRegistry.add(level,pos);
+        if (!feeder.active()) { feeder.status = feeder.redstonePaused() ? 4 : 3; return; }
+        feeder.status = 0;
         if (--feeder.cooldown > 0) return;
         feeder.cooldown = feeder.cycleLength();
         var animals = level.getEntitiesOfClass(Animal.class, new AABB(pos).inflate(Config.FEEDER_RADIUS.get()));
+        for (Animal animal : animals) me.ez.farmhand.util.FeederTemptGoal.install(animal);
         for (Animal animal : animals) {
-            if (animal.getAge() != 0 || !animal.canFallInLove()) continue;
+            if (animal.getAge() != 0 || !animal.canFallInLove() || !pos.closerToCenterThan(animal.position(), 3)) continue;
             // Do not waste food on a lone animal. Compatible adult partners must be nearby.
             Animal partner = animals.stream().filter(other -> other != animal && other.getClass() == animal.getClass()
                     && other.getAge() == 0 && (other.canFallInLove() || other.isInLove()))
+                    .filter(other -> pos.closerToCenterThan(other.position(), 3))
                     .min(java.util.Comparator.comparingDouble(animal::distanceToSqr)).orElse(null);
             if (partner == null) continue;
             int needed = partner.isInLove() ? 1 : 2;
