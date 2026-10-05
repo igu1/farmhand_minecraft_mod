@@ -1,6 +1,6 @@
 # Farmhand — visual and inventory overhaul
 
-- Removed the separate creative tab; items use vanilla Functional Blocks and Tools & Utilities.
+- Added a dedicated Farmhand creative tab for all machines and the satchel.
 - Growth Lamp right-click power, visible interlock shutoff, and active-only emissive jade texture.
 - Coop and feeder display synchronized real inventory contents instead of decorative eggs/feed.
 - Planter's Satchel planting now wakes a covering Growpost, so an interlock-paused Growth Lamp relights immediately after replanting.

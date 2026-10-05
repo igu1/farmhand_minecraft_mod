@@ -12,7 +12,7 @@ XP Siphon and the handheld Harvest Compass have been removed; old compass items 
 Install the mod on **both client and server**. GUI progress/state and inventory transfers are server-authoritative.
 Editable source models are in `art/blockbench/`.
 
-Farmhand has no separate creative tab: machines are in Functional Blocks, and the satchel is in Tools & Utilities.
+Items live in a dedicated **Farmhand** creative tab (Growth Lamp, Coop, Feeder, Growpost, Planter's Satchel).
 
 Growpost scans ordinary farmland crops every second. An empty or partially unloaded field does not report fully grown. Overlapping posts can each notify their own owner. Ripe crops already remain ripe in vanilla; trample protection protects their farmland, not against harvesting, explosions or every kind of mob interaction. Tests cover milestone deduplication, saved settings, lamp-power logic and inventory render synchronization; GUI appearance and live gameplay loops still require in-game verification.
 

@@ -29,7 +29,7 @@ Machine radius, chance and interval settings are in `config/farmhand-common.toml
 
 ## Keybinds
 
-No extra keybinds required. Right-click the coop/feeder for inventories, Growpost for configuration, or the lamp to toggle power. Machines appear in Functional Blocks; the satchel appears in Tools & Utilities, without a separate creative tab.
+No extra keybinds required. Right-click the coop/feeder for inventories, Growpost for configuration, or the lamp to toggle power. All items appear in the dedicated Farmhand creative tab.
 
 ## Requirements
 

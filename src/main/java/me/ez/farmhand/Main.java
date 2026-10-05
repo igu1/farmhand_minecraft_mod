@@ -13,7 +13,7 @@ public class Main {
         // Blocks register before items: block items wrap block holders.
         Init.BLOCKS.register(modEventBus);
         Init.BLOCK_ENTITIES.register(modEventBus);
-        modEventBus.addListener(Init::creativeContents);
+        Init.CREATIVE_TABS.register(modEventBus);
         Init.ITEMS.register(modEventBus);
         Init.MENUS.register(modEventBus);
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
